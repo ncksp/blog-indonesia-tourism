@@ -19,3 +19,9 @@ Auth::routes();
 
 Route::get('/', 'HomeController@home')->name('welcome');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::view('details', 'public.story-details')->name('story.details');
+Route::view('category', 'public.story-category')->name('story.category');
+Route::view('profile', 'public.profile')->name('profile');
+Route::view('blogs', 'public.blogs')->name('blogs');
+
+Route::view('users', 'admin.users')->name('admin.users');

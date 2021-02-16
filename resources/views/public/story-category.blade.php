@@ -3,6 +3,11 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
+        <div class="col">
+            <h5>{{ 'Category Beach' }}</h5>
+        </div>
+    </div>
+    <div class="row">
         @for ($i = 0; $i < 10; $i++)
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mb-3">
             <div class="card w-75">
@@ -14,7 +19,6 @@
                             <a href="{{ Route('story.details') }}">full story</a>
                         @endif
                     </p>
-                    <i>Category <a href="{{ Route('story.category') }}">{{ 'Beach' }}</a></i>
                 </div>
             </div>
         </div>
