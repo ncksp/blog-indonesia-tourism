@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -13,7 +14,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('home');
+        parent::__construct();
+        $this->middleware('auth')->except(['aboutUs']);
     }
 
     /**
@@ -23,11 +25,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view(Auth::user()->getRole().'.home');
     }
 
-    public function home()
+    public function aboutUs()
     {
-        return view('welcome');
+        return view('public.about-us')->with('categories', $this->categories);
     }
 }

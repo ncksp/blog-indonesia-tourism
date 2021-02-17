@@ -3,11 +3,11 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
+                <h4 class="mb-4">Blog List</h4>
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Blog List</h5>
-                        <button class="btn btn-outline-primary my-2" data-toggle="modal" data-target="#create-modal">+
+                        <button class="btn btn-outline-primary float-right" data-toggle="modal" data-target="#create-modal">+
                             Create Blog</button>
                         <table class="table table-hover table-striped">
                             <thead>

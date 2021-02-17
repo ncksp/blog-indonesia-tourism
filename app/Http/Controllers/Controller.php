@@ -14,6 +14,6 @@ class Controller extends BaseController
 
     protected $categories;
     public function __construct() {
-        $this->categories = Category::take(5);
+        $this->categories = Category::all();
     }
 }

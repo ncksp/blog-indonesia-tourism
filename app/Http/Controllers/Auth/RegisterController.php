@@ -38,7 +38,13 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('guest');
+    }
+
+    public function showRegistrationForm()
+    {
+        return view('auth.register')->with('categories', $this->categories);
     }
 
     /**

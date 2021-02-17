@@ -17,11 +17,18 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', 'HomeController@home')->name('welcome');
-Route::get('/home', 'HomeController@index')->name('home');
-Route::view('details', 'public.story-details')->name('story.details');
-Route::view('category', 'public.story-category')->name('story.category');
-Route::view('profile', 'public.profile')->name('profile');
-Route::view('blogs', 'public.blogs')->name('blogs');
+Route::get('/', 'ArticleController@index')->name('welcome');
+Route::get('home', 'HomeController@index')->name('home');
+Route::get('categories/{id}', 'ArticleController@byCategory')->name('articles.category');
+Route::get('about-us', 'HomeController@aboutUs')->name('about.us');
 
-Route::view('users', 'admin.users')->name('admin.users');
+Route::resource('articles', 'ArticleController');
+
+Route::get('profile', 'UserController@profile')->name('profile');
+Route::put('profile', 'UserController@updateProfile')->name('update.profile');
+Route::get('users', 'UserController@getUserOnly')->name('users');
+Route::delete('users/{id}', 'UserController@destroy')->name('users.destroy');
+
+
+Route::view('blogs', 'user.blogs')->name('blogs');
+
