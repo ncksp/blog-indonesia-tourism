@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Ramsey\Uuid\Uuid;
 
 class ArticleController extends Controller
 {
@@ -12,14 +13,11 @@ class ArticleController extends Controller
     {
         parent::__construct();
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         if(Auth::check()) return redirect(route('home'));
+
         $articles = Article::with('category')->get();
         return view('public.welcome', compact('articles'))->with('categories', $this->categories);
     }
@@ -31,70 +29,54 @@ class ArticleController extends Controller
         })->get();
         return view('public.welcome', compact('articles'))->with('categories', $this->categories);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function blogByUser()
     {
-        //
+        $articles = Article::where('user_id', Auth::user()->id)->get();
+        return view('user.blogs', compact('articles'))->with('categories', $this->categories);;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        if(Auth::user()->isAdmin()) return abort(404);
+
+        $request->validate([
+            'title' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'photo' => 'mimes:jpeg,jpg,png,gif|required',
+            'description' => 'required'
+        ]);
+
+        $file = $request->file('photo');
+        $fileName = Uuid::uuid4() . $file->getClientOriginalName();
+        $file->move(public_path('images/'), $fileName);
+
+        $data = $request->all();
+        $data['image'] = $fileName;
+        $data['user_id'] = Auth::user()->id;
+        try {
+            Article::create($data);
+            return redirect()->route('blogs')->with('success', 'Add Blog Success');
+        } catch (\Throwable $th) {
+            return redirect()->back();
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $article = Article::findOrFail($id);
         return view('public.story-details', compact('article'))->with('categories', $this->categories);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        if(Auth::user()->isAdmin()) return abort(404);
+
+        try {
+            Article::find($id)->delete();
+            return redirect()->route('blogs')->with('success', 'Delete blog Success');
+        } catch (\Throwable $th) {
+            return redirect()->back();
+        }
     }
 }

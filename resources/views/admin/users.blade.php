@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">User Management</h5>
-                    <table class="table table-hover table-striped">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Name</th>
